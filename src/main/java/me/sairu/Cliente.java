@@ -1,15 +1,31 @@
 package me.sairu;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class Cliente {
 
-	private String nome;
+    private Banco banco;
+    private String nome;
+    private String endereco;
+    private String email;
+    private String telefone;
 
-	public String getNome() {
-		return nome;
-	}
+    public void realizarOperacao(String tipoOperacao, double valor, Conta contaDestino) throws Exception {
+        Conta conta = banco.getConta(this);
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
+        if (tipoOperacao.equals("deposito")) {
+            conta.depositar(valor);
+        } else if (tipoOperacao.equals("saque")) {
+            conta.sacar(valor);
+        } else if (tipoOperacao.equals("transferencia")) {
+            conta.transferir(valor, contaDestino);
+        } else {
+            throw new Exception("Tipo de operação inválido");
+        }
+    }
 }
