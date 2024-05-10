@@ -3,31 +3,33 @@ package me.sairu;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor
 public class Banco {
 
-    private final List<Conta> contas = new ArrayList<>();
+    private final Map<Cliente, Conta> contasCorrentes = new HashMap<>();
+    private final Map<Cliente, Conta> contasPoupancas = new HashMap<>();
 
-    public void criarConta(Cliente cliente, String tipoConta) throws Exception {
-        if (tipoConta.equals("corrente")) {
-            contas.add(new ContaCorrente(cliente));
-        } else if (tipoConta.equals("poupanca")) {
-            contas.add(new ContaPoupanca(cliente));
-        } else {
-            throw new Exception("Tipo de conta inválido");
-        }
+    public void criarContaCorrente(Cliente cliente) {
+        contasCorrentes.put(cliente, new ContaCorrente(cliente));
     }
 
-    public Conta getConta(Cliente cliente) throws Exception {
-        for (Conta conta : contas) {
-            if (conta.getCliente().equals(cliente)) {
-                return conta;
-            }
-        }
-        throw new Exception("Conta não encontrada");
+    public void criarContaPoupanca(Cliente cliente) {
+        contasPoupancas.put(cliente, new ContaPoupanca(cliente));
+    }
+
+    public Conta getContaCorrente(Cliente cliente) {
+        return contasCorrentes.get(cliente);
+    }
+
+    public Conta getContaPoupanca(Cliente cliente) {
+        return contasPoupancas.get(cliente);
+    }
+
+    public boolean autenticarCliente(Cliente cliente, String senha) {
+        return cliente.getSenha().equals(senha);
     }
 }
